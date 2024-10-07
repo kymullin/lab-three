@@ -18,9 +18,9 @@ def test_gpio_pins(pins):
         for pin in pins:
             print(f"Testing GPIO pin {pin}")
             GPIO.output(pin, GPIO.HIGH)  # Turn on
-            time.sleep(1)                 # Wait for 1 second
+            time.sleep(5)                 # Wait for 1 second
             GPIO.output(pin, GPIO.LOW)    # Turn off
-            time.sleep(1)                 # Wait for 1 second
+            time.sleep(5)                 # Wait for 1 second
     except KeyboardInterrupt:
         print("Test interrupted")
     finally:
