@@ -1,6 +1,9 @@
 import RPi.GPIO as GPIO
 import time
 
+seconds = 1
+
+
 # List of actual physical GPIO pins to test
 output_pins = [11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35]
 
@@ -18,9 +21,9 @@ def test_gpio_pins(pins):
         for pin in pins:
             print(f"Testing GPIO pin {pin}")
             GPIO.output(pin, GPIO.HIGH)  # Turn on
-            time.sleep(5)                 # Wait for 1 second
+            time.sleep(seconds)                 # Wait for 1 second
             GPIO.output(pin, GPIO.LOW)    # Turn off
-            time.sleep(5)                 # Wait for 1 second
+            time.sleep(seconds)                 # Wait for 1 second
     except KeyboardInterrupt:
         print("Test interrupted")
     finally:
