@@ -5,7 +5,7 @@ import time
 hole_pins = [11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35]  # Pin numbers for the GPIOs
 
 # Initialize GPIO
-GPIO.setmode(GPIO.BCM)  # Using BCM numbering
+GPIO.setmode(GPIO.BOARD)  # Using BCM numbering
 for pin in hole_pins:
     GPIO.setup(pin, GPIO.OUT)
 
