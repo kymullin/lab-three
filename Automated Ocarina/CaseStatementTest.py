@@ -47,7 +47,7 @@ def play_notes(note_array):
     GPIO.cleanup()
 
 # Example array of notes to play (MIDI note numbers)
-note_array = [69, 71, 72, 74, 76, 79]  # Example sequence of notes
+note_array = [72, 74, 76, 77, 79, 81, 83, 84, 86, 88, 89]  # Example sequence of notes
 
 # Play the notes
 play_notes(note_array)
