@@ -5,11 +5,11 @@ import time
 hole_pins = [11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35]  # Pin numbers for the GPIOs
 
 # Initialize GPIO
-GPIO.setmode(GPIO.BOARD)  # Using BCM numbering
+GPIO.setmode(GPIO.BOARD)  # Using Board numbering
 for pin in hole_pins:
     GPIO.setup(pin, GPIO.OUT)
 
-# Define the note-to-hole mapping for the 12-hole ocarina
+# Define the note-to-hole mapping for the 10-hole ocarina
 # Each list represents the state of the holes: 1 for covered, 0 for uncovered
 note_to_holes = {
     72: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # C5
