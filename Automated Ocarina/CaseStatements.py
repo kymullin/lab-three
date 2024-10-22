@@ -1,9 +1,17 @@
+#!/usr/bin/python3
+
 import RPi.GPIO as GPIO
 import time
 import mido
+import argparse
 from pathlib import Path
 
-midi_file_path = 'twinkle.mid'
+parser = argparse.ArgumentParser(description="filename")
+
+parser.add_argument("filename", type=str, help="Name of the MIDI file")
+args = parser.parse_args()
+
+midi_file_path = args.filename
 
 # Define the GPIO pin numbers for the 12 holes (adjust according to your setup)
 hole_pins = [11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35]  # Pin numbers for the GPIOs
