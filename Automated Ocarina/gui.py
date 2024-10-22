@@ -5,7 +5,7 @@ import time
 import threading
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\tryst\OneDrive\Notebook\Automated Ocarina\assets\frame0")
+ASSETS_PATH = OUTPUT_PATH / Path("/home/admin/lab-three/Automated\ Ocarina/assets/frame0")
 
 
 def relative_to_assets(path: str) -> Path:
