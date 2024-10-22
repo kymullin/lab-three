@@ -67,7 +67,7 @@ def play_midi_file(midi_file_path):
     midi_file = mido.MidiFile(midi_file_path)
 
     # Store the current state of the holes
-    current_holes = [0] * 12
+    current_holes = [0] * 10
 
     # Iterate through MIDI messages in the file
     for message in midi_file.play():
