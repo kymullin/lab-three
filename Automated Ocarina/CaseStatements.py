@@ -61,4 +61,4 @@ def play_midi_file(midi_file_path):
     GPIO.cleanup()
 
 # Call the function with the path to your MIDI file
-play_midi_file('your_midi_file.mid')
+play_midi_file(midi_file_path)
