@@ -16,13 +16,18 @@ midi_file_path = args.filename
 # Define the GPIO pin numbers for the 12 holes (adjust according to your setup)
 hole_pins = [11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35]  # Pin numbers for the GPIOs
 
+# Set pin 33 for fan control
+fan_pin = 33
+
 # Initialize GPIO
 GPIO.setmode(GPIO.BOARD)  # Using Board numbering
 for pin in hole_pins:
     GPIO.setup(pin, GPIO.OUT)
 
-# Define the note-to-hole mapping for the 10-hole ocarina
-# Each list represents the state of the holes: 1 for covered, 0 for uncovered
+# Setup fan control pin
+GPIO.setup(fan_pin, GPIO.OUT)
+
+# Define the note-to-hole mapping for the 12-hole ocarina
 note_to_holes = {
     72: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # C5
     74: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # D5
@@ -42,26 +47,46 @@ def set_holes(hole_states):
     for pin, state in zip(hole_pins, hole_states):
         GPIO.output(pin, GPIO.HIGH if state == 1 else GPIO.LOW)
 
+def smooth_transition(current_holes, next_holes):
+    """Smoothly transition from one note's hole configuration to the next."""
+    for i in range(len(current_holes)):
+        if current_holes[i] != next_holes[i]:
+            GPIO.output(hole_pins[i], GPIO.HIGH if next_holes[i] == 1 else GPIO.LOW)
+            time.sleep(0.05)  # Small delay to simulate a smooth transition
+
+def control_fan(start):
+    """Control the fan on pin 33: start or stop based on the 'start' flag."""
+    if start:
+        GPIO.output(fan_pin, GPIO.HIGH)  # Turn fan ON
+    else:
+        GPIO.output(fan_pin, GPIO.LOW)   # Turn fan OFF
+
 def play_midi_file(midi_file_path):
     """Interpret and play a MIDI file using the note-to-hole mappings."""
     # Load the MIDI file using mido
     midi_file = mido.MidiFile(midi_file_path)
+
+    # Store the current state of the holes
+    current_holes = [0] * 12
 
     # Iterate through MIDI messages in the file
     for message in midi_file.play():
         if message.type == 'note_on' and message.velocity > 0:  # Only handle 'note_on' events
             note = message.note
             print(f"Playing note {note}")
+
+            control_fan(True)  # Start the fan when a note is played
             
             if note in note_to_holes:
-                hole_states = note_to_holes[note]
-                set_holes(hole_states)  # Control the holes to match the note
+                next_holes = note_to_holes[note]
+                smooth_transition(current_holes, next_holes)  # Smooth transition to the next note
+                current_holes = next_holes  # Update the current holes state
             else:
                 print(f"Note {note} not mapped to any hole configuration")
-        
-        elif message.type == 'note_off':  # Optionally reset holes when the note is released
+
+        elif message.type == 'note_off':  # Stop the fan when the note is released
             print(f"Stopping note {message.note}")
-            set_holes([0] * 12)  # Reset all holes to uncovered (if desired)
+            control_fan(False)  # Stop the fan
 
         time.sleep(message.time)  # Sleep to match the timing of the MIDI file
 
