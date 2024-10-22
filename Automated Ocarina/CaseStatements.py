@@ -1,6 +1,9 @@
 import RPi.GPIO as GPIO
 import time
 import mido
+from pathlib import Path
+
+midi_file_path = 'twinkle.mid'
 
 # Define the GPIO pin numbers for the 12 holes (adjust according to your setup)
 hole_pins = [11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35]  # Pin numbers for the GPIOs
