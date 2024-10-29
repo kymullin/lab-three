@@ -65,11 +65,12 @@ button_2 = Button(
     relief="flat"
 )
 button_2.place(
-    x=122.0,
-    y=395.0,
+    x=121.0,
+    y=261.0,
     width=457.0,
     height=88.0
 )
+
 
 # Button 3 (90 seconds)
 button_image_3 = PhotoImage(file=relative_to_assets("button_3.png"))
@@ -80,13 +81,13 @@ button_3 = Button(
     command=lambda: on_button_click(15, "heart_and_soul.mid"),  # Change this to your actual MIDI file
     relief="flat"
 )
+
 button_3.place(
-    x=121.0,
-    y=261.0,
+    x=122.0,
+    y=395.0,
     width=457.0,
     height=88.0
 )
-
 canvas.create_rectangle(
     0.0,
     0.0,
