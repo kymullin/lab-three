@@ -11,15 +11,20 @@ ASSETS_PATH = OUTPUT_PATH / Path("/home/admin/lab-three/Automated Ocarina/assets
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+# Function to update the progress bar
 def run_progress(duration):
     for i in range(101):
         progress_bar['value'] = i
-        window.after(int(duration / 100), lambda: None)  # Keep UI thread processing
-        time.sleep(duration / 100)  # Progress bar updates in steps proportional to total duration
+        window.after(10, update_progress)  # Schedule progress update every 10ms to keep UI responsive
+        time.sleep(duration / 100)  # Simulate long task with time delay
     progress_bar['value'] = 0  # Reset progress bar once done
 
+# Function that allows progress to update smoothly using window.after()
+def update_progress():
+    window.update_idletasks()  # Keep the UI responsive during progress updates
+
 def on_button_click(duration, midi_file):
-    # Start the progress bar in a separate thread
+    # Start the progress bar in a separate thread to avoid UI freezing
     threading.Thread(target=run_progress, args=(duration,)).start()
     # Call the external Python file with the MIDI file as an argument
     subprocess.Popen(["python3", "CaseStatements.py", midi_file])  # Adjust the path as needed
