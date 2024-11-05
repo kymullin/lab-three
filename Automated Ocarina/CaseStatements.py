@@ -42,6 +42,13 @@ note_to_holes = {
     89: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # F6
 }
 
+# Grab tempo
+tempo = 0;
+for track in mido.MidiFile(midi_file_path).tracks:
+        for msg in track:
+            if msg.type == 'set_tempo':
+                tempo = msg.tempo
+
 def set_holes(hole_states):
     """Control the GPIO pins to cover/uncover holes based on the hole_states."""
     for pin, state in zip(hole_pins, hole_states):
@@ -88,7 +95,7 @@ def play_midi_file(midi_file_path):
             print(f"Stopping note {message.note}")
             control_fan(False)  # Stop the fan
 
-        time.sleep(message.time)  # Sleep to match the timing of the MIDI file
+        time.sleep(mido.tick2second(message.time, midi_file.ticks_per_beat, tempo))  # Sleep to match the timing of the MIDI file
 
     # Cleanup GPIO after the file has finished playing
     GPIO.cleanup()
