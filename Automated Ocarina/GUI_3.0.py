@@ -4,7 +4,7 @@ from pathlib import Path
 
 # Correct path handling
 OUTPUT_PATH = Path(__file__).parent  # Path of the current script
-ASSETS_PATH = OUTPUT_PATH / "home/admin/lab-three/Automated Ocarina"  # Fix path concatenation
+ASSETS_PATH = OUTPUT_PATH / Path("/home/admin/lab-three/Automated Ocarina")
 
 # Function to handle button click
 def on_button_click(song_name):
