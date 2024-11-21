@@ -1,19 +1,19 @@
 from pathlib import Path
-from tkinter import Tk, Canvas, Button
+from tkinter import Tk, Canvas, Button, PhotoImage
 from tkinter.ttk import Progressbar
 import time
 import threading
 import subprocess
 
-# Correct path handling for assets
+# Adjust asset paths
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("/home/admin/lab-three/Automated Ocarina/assets/frame0")  # Adjust path
+ASSETS_PATH = OUTPUT_PATH / Path("assets/frame0")  # Remove leading slash to make it relative
 
 # Helper function to get relative paths for assets
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-# Function to update the progress bar
+# Function to run the progress bar
 def run_progress(duration):
     for i in range(101):
         progress_bar['value'] = i
@@ -22,19 +22,19 @@ def run_progress(duration):
 
 # Function to handle button click: play MIDI and update progress bar
 def on_button_click(duration, midi_file):
-    # Start the progress bar in a separate thread
+    # Start the progress bar in a separate thread to avoid freezing the GUI
     threading.Thread(target=run_progress, args=(duration,)).start()
     # Call the external Python file with the MIDI file as an argument
     midi_file_path = relative_to_assets(midi_file)  # Get the correct path to the MIDI file
     print(f"Playing MIDI file: {midi_file_path}")
-    subprocess.Popen(["python3", "CaseStatements.py", str(midi_file_path)])  # Adjust path if necessary
+    subprocess.Popen(["python3", "CaseStatements.py", str(midi_file_path)])  # Adjust the path as needed
 
 # Create the main window
 window = Tk()
 window.geometry("700x550")
 window.configure(bg="#FFFFFF")
 
-# Create the canvas (background)
+# Create the canvas
 canvas = Canvas(
     window,
     bg="#FFFFFF",
@@ -46,58 +46,61 @@ canvas = Canvas(
 )
 canvas.place(x=0, y=0)
 
-# Button 1 (for example, Twinkle Twinkle with 5 seconds of progress bar duration)
+# Button 1 (5 seconds)
+button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
 button_1 = Button(
-    window,
-    text="Twinkle Twinkle Little Star",  # Button text
-    command=lambda: on_button_click(5, "twinkle.mid"),  # Call function with 5 seconds and MIDI file
-    font=("Helvetica", 14),
-    bg="#FF0000",  # Red background color
-    fg="white",
-    bd=5,
-    relief="raised",
-    width=20,
-    height=2
+    image=button_image_1,
+    borderwidth=0,
+    highlightthickness=0,
+    command=lambda: on_button_click(5, "twinkle.mid"),  # Change this to your actual MIDI file
+    relief="flat"
 )
-button_1.place(x=121, y=144, width=457, height=88)
+button_1.place(
+    x=121.0,
+    y=144.0,
+    width=457.0,
+    height=88.0
+)
 
-# Button 2 (for example, Wheels on the Bus with 10 seconds of progress bar duration)
+# Button 2 (10 seconds)
+button_image_2 = PhotoImage(file=relative_to_assets("button_2.png"))
 button_2 = Button(
-    window,
-    text="Wheels on the Bus",
-    command=lambda: on_button_click(10, "wheels_on_the_bus.mid"),
-    font=("Helvetica", 14),
-    bg="#FF5733",  # Orange background color
-    fg="white",
-    bd=5,
-    relief="raised",
-    width=20,
-    height=2
+    image=button_image_2,
+    borderwidth=0,
+    highlightthickness=0,
+    command=lambda: on_button_click(10, "wheels_on_the_bus.mid"),  # Change this to your actual MIDI file
+    relief="flat"
 )
-button_2.place(x=121, y=261, width=457, height=88)
+button_2.place(
+    x=121.0,
+    y=261.0,
+    width=457.0,
+    height=88.0
+)
 
-# Button 3 (for example, Heart and Soul with 15 seconds of progress bar duration)
+# Button 3 (15 seconds)
+button_image_3 = PhotoImage(file=relative_to_assets("button_3.png"))
 button_3 = Button(
-    window,
-    text="Heart and Soul",
-    command=lambda: on_button_click(15, "heart_and_soul.mid"),
-    font=("Helvetica", 14),
-    bg="#FF9800",  # Yellow background color
-    fg="white",
-    bd=5,
-    relief="raised",
-    width=20,
-    height=2
+    image=button_image_3,
+    borderwidth=0,
+    highlightthickness=0,
+    command=lambda: on_button_click(15, "heart_and_soul.mid"),  # Change this to your actual MIDI file
+    relief="flat"
 )
-button_3.place(x=122, y=395, width=457, height=88)
+button_3.place(
+    x=122.0,
+    y=395.0,
+    width=457.0,
+    height=88.0
+)
 
-# Create a rectangle for the header section
+# Create a red header rectangle
 canvas.create_rectangle(
     0.0,
     0.0,
     700.0,
     110.0,
-    fill="#B30000",  # Red color for the header
+    fill="#B30000",
     outline=""
 )
 
@@ -106,9 +109,9 @@ canvas.create_text(
     110.0,
     29.0,
     anchor="nw",
-    text="Song Selector",  # Title text
-    fill="#FFFFFF",  # White text color
-    font=("Helvetica", 32, "bold")
+    text="Song Selector",
+    fill="#FFFFFF",
+    font=("Inter Bold", 64 * -1)
 )
 
 # Create the progress bar
@@ -118,5 +121,5 @@ progress_bar.place(x=100, y=500)
 # Make the window non-resizable
 window.resizable(False, False)
 
-# Start the Tkinter event loop
+# Run the Tkinter main loop
 window.mainloop()
