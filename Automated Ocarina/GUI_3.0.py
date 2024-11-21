@@ -1,125 +1,94 @@
-from pathlib import Path
-from tkinter import Tk, Canvas, Button, PhotoImage
-from tkinter.ttk import Progressbar
-import time
-import threading
+import tkinter as tk
 import subprocess
+from pathlib import Path
 
-# Adjust asset paths
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("assets/frame0")  # Remove leading slash to make it relative
+# Correct path handling
+# If you're using an absolute path for ASSETS_PATH, no need to combine it with OUTPUT_PATH
+# We can simply set the absolute path directly
+ASSETS_PATH = Path("/home/admin/lab-three/Automated Ocarina")
 
-# Helper function to get relative paths for assets
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
+# Function to handle button click
+def on_button_click(song_name):
+    print(f"{song_name} Button Clicked!")
+    # Call the subprocess to run CaseStatements.py with the corresponding MIDI file
+    play_midi(song_name)
 
-# Function to run the progress bar
-def run_progress(duration):
-    for i in range(101):
-        progress_bar['value'] = i
-        time.sleep(duration / 100)  # Progress bar updates in steps proportional to the total duration
-    progress_bar['value'] = 0  # Reset progress bar once done
-
-# Function to handle button click: play MIDI and update progress bar
-def on_button_click(duration, midi_file):
-    # Start the progress bar in a separate thread to avoid freezing the GUI
-    threading.Thread(target=run_progress, args=(duration,)).start()
-    # Call the external Python file with the MIDI file as an argument
-    midi_file_path = relative_to_assets(midi_file)  # Get the correct path to the MIDI file
-    print(f"Playing MIDI file: {midi_file_path}")
-    subprocess.Popen(["python3", "CaseStatements.py", str(midi_file_path)])  # Adjust the path as needed
+# Function to run the external Python script with the MIDI file as an argument
+def play_midi(song_name):
+    # Dictionary of songs to their respective MIDI files
+    midi_files = {
+        "Twinkle Twinkle Little Star": "twinkle.mid",
+        "Wheels on the Bus": "wheels_on_the_bus.mid",
+        "Heart and Soul": "heart_and_soul.mid",
+        "Tetris": "tetris.mid",
+        "Jingle Bells": "jingle_bells.mid"
+    }
+    
+    # Get the corresponding MIDI file based on the song name
+    midi_file = midi_files.get(song_name)
+    
+    if midi_file:
+        print(f"Calling CaseStatements.py with {midi_file}")
+        try:
+            # Construct the full path to the MIDI file
+            midi_file_path = ASSETS_PATH / midi_file
+            print(f"MIDI file path: {midi_file_path}")
+            
+            # Call the external script with the MIDI file as an argument using subprocess
+            subprocess.Popen(["python3", "CaseStatements.py", str(midi_file_path)])  # Adjust path if necessary
+        except Exception as e:
+            print(f"Error: {e}")
+    else:
+        print(f"Song {song_name} not found in the list.")
 
 # Create the main window
-window = Tk()
-window.geometry("700x550")
-window.configure(bg="#FFFFFF")
+root = tk.Tk()
+root.title("Song Selector")
 
-# Create the canvas
-canvas = Canvas(
-    window,
-    bg="#FFFFFF",
-    height=550,
-    width=700,
-    bd=0,
-    highlightthickness=0,
-    relief="ridge"
-)
-canvas.place(x=0, y=0)
+# Set the window size
+root.geometry("400x600")
 
-# Button 1 (5 seconds)
-button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
-button_1 = Button(
-    image=button_image_1,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: on_button_click(5, "twinkle.mid"),  # Change this to your actual MIDI file
-    relief="flat"
-)
-button_1.place(
-    x=121.0,
-    y=144.0,
-    width=457.0,
-    height=88.0
-)
+# Set a vibrant background color for the window
+root.configure(bg="#474747")
 
-# Button 2 (10 seconds)
-button_image_2 = PhotoImage(file=relative_to_assets("button_2.png"))
-button_2 = Button(
-    image=button_image_2,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: on_button_click(10, "wheels_on_the_bus.mid"),  # Change this to your actual MIDI file
-    relief="flat"
-)
-button_2.place(
-    x=121.0,
-    y=261.0,
-    width=457.0,
-    height=88.0
-)
+# Frame for the title to create a colored box effect
+title_frame = tk.Frame(root, bg="#3F51B5", bd=5)
+title_frame.pack(fill="x", pady=20)
 
-# Button 3 (15 seconds)
-button_image_3 = PhotoImage(file=relative_to_assets("button_3.png"))
-button_3 = Button(
-    image=button_image_3,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: on_button_click(15, "heart_and_soul.mid"),  # Change this to your actual MIDI file
-    relief="flat"
-)
-button_3.place(
-    x=122.0,
-    y=395.0,
-    width=457.0,
-    height=88.0
-)
+# Add the title label inside the colored box
+title_label = tk.Label(title_frame, text="Song Selector", font=("Helvetica", 20, "bold"), fg="white", bg="#3F51B5")
+title_label.pack(pady=10)
 
-# Create a red header rectangle
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    700.0,
-    110.0,
-    fill="#B30000",
-    outline=""
-)
+# Style for the button
+def create_button(text, bg_color, command):
+    return tk.Button(
+        root, 
+        text=text, 
+        command=command,
+        font=("Helvetica", 14, "bold"),
+        bg=bg_color, 
+        fg="white", 
+        bd=5, 
+        relief="raised", 
+        width=20, 
+        height=2,
+        activebackground="#4CAF50",  # Darker green when pressed
+        activeforeground="yellow"  # Yellow text when pressed
+    )
 
-# Create the title text
-canvas.create_text(
-    110.0,
-    29.0,
-    anchor="nw",
-    text="Song Selector",
-    fill="#FFFFFF",
-    font=("Inter Bold", 64 * -1)
-)
+# Create the buttons with different colors and songs
+button1 = create_button("Twinkle Twinkle Little Star", "#FF0000", lambda: on_button_click("Twinkle Twinkle Little Star"))
+button2 = create_button("Wheels on the Bus", "#FF5733", lambda: on_button_click("Wheels on the Bus"))
+button3 = create_button("Heart and Soul", "#FF9800", lambda: on_button_click("Heart and Soul"))
+button4 = create_button("Tetris", "#3F51B5", lambda: on_button_click("Tetris"))
+button5 = create_button("Jingle Bells", "#9C27B0", lambda: on_button_click("Jingle Bells"))
 
-# Create the progress bar
-progress_bar = Progressbar(window, orient="horizontal", length=500, mode="determinate")
-progress_bar.place(x=100, y=500)
+# Place the buttons on the window with some space in between
+button1.pack(pady=10)
+button2.pack(pady=10)
+button3.pack(pady=10)
+button4.pack(pady=10)
+button5.pack(pady=10)
 
-# Make the window non-resizable
-window.resizable(False, False)
-
-# Run the Tkinter main loop
-window.mainloop()
+# Start the Tkinter event loop
+root.mainloop()
