@@ -1,5 +1,10 @@
 import tkinter as tk
 import subprocess
+from pathlib import Path
+
+# Correct path handling
+OUTPUT_PATH = Path(__file__).parent  # Path of the current script
+ASSETS_PATH = OUTPUT_PATH / "home/admin/lab-three/Automated Ocarina"  # Fix path concatenation
 
 # Function to handle button click
 def on_button_click(song_name):
@@ -24,8 +29,12 @@ def play_midi(song_name):
     if midi_file:
         print(f"Calling CaseStatements.py with {midi_file}")
         try:
+            # Construct the full path to the MIDI file
+            midi_file_path = ASSETS_PATH / midi_file
+            print(f"MIDI file path: {midi_file_path}")
+            
             # Call the external script with the MIDI file as an argument using subprocess
-            subprocess.Popen(["python3", "CaseStatements.py", midi_file])  # Adjust path if necessary
+            subprocess.Popen(["python3", "CaseStatements.py", str(midi_file_path)])  # Adjust path if necessary
         except Exception as e:
             print(f"Error: {e}")
     else:
