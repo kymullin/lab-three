@@ -14,7 +14,7 @@ args = parser.parse_args()
 midi_file_path = args.filename
 
 # Define the GPIO pin numbers for the 12 holes (adjust according to your setup)
-hole_pins = [11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35]  # Pin numbers for the GPIOs
+hole_pins = [11, 12, 13, 15, 16, 18, 22, 7]#, 31, 32, 33, 35]  # Pin numbers for the GPIOs
 
 # Set pin 33 for fan control
 fan_pin = 33
@@ -23,23 +23,36 @@ fan_pin = 33
 GPIO.setmode(GPIO.BOARD)  # Using Board numbering
 for pin in hole_pins:
     GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, GPIO.LOW)
 
 # Setup fan control pin
 GPIO.setup(fan_pin, GPIO.OUT)
 
 # Define the note-to-hole mapping for the 12-hole ocarina
 note_to_holes = {
-    72: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # C5
-    74: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # D5
-    76: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1],  # E5
-    77: [0, 0, 0, 1, 1, 1, 1, 1, 1, 1],  # F5
-    79: [0, 0, 0, 0, 1, 1, 1, 1, 1, 1],  # G5
-    81: [0, 0, 0, 0, 1, 0, 1, 1, 1, 1],  # A5
-    83: [0, 0, 0, 0, 1, 0, 0, 1, 1, 1],  # B5
-    84: [0, 0, 0, 0, 1, 0, 0, 0, 1, 1],  # C6
-    86: [0, 0, 0, 0, 1, 0, 0, 0, 0, 1],  # D6
-    88: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],  # E6
-    89: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # F6
+    72: [0, 0, 0, 0, 0, 0, 0, 0],#, 0, 0],  # C5
+    74: [1, 0, 0, 0, 0, 0, 0, 0],#, 0, 0],  # D5
+    76: [1, 1, 0, 0, 0, 0, 0, 0],#, 0, 0],  # E5
+    77: [1, 1, 1, 0, 0, 0, 0, 0],#, 0, 0],  # F5
+    79: [1, 1, 1, 1, 0, 0, 0, 0],#, 0, 0],  # G5
+    81: [1, 1, 1, 1, 0, 1, 0, 0],#, 0, 0],  # A5
+    83: [1, 1, 1, 1, 0, 1, 1, 0],#, 0, 0],  # B5
+    84: [1, 1, 1, 1, 0, 1, 1, 1],#, 0, 0],  # C6
+    86: [1, 1, 1, 1, 0, 1, 1, 1],#, 1, 0],  # D6
+    88: [1, 1, 1, 1, 0, 1, 1, 1],#, 1, 1],  # E6
+    89: [1, 1, 1, 1, 1, 1, 1, 1]#, 1, 1]   # F6
+    
+    #72: [1, 0, 0, 0, 0, 0, 0, 0],#, 0, 0],  # C5
+    #74: [0, 1, 0, 0, 0, 0, 0, 0],#, 0, 0],  # D5
+    #76: [0, 0, 1, 0, 0, 0, 0, 0],#, 0, 0],  # E5
+    #77: [0, 0, 0, 1, 0, 0, 0, 0],#, 0, 0],  # F5
+    #79: [0, 0, 0, 0, 1, 0, 0, 0],#, 0, 0],  # G5
+    #81: [0, 0, 0, 0, 0, 1, 0, 0],#, 0, 0],  # A5
+    #83: [0, 0, 0, 0, 0, 0, 1, 0],#, 0, 0],  # B5
+    #84: [0, 0, 0, 0, 0, 0, 0, 1],#, 0, 0],  # C6
+    #86: [1, 1, 1, 1, 0, 1, 1, 1],#, 1, 0],  # D6
+    #88: [1, 1, 1, 1, 0, 1, 1, 1],#, 1, 1],  # E6
+    #89: [1, 1, 1, 1, 1, 1, 1, 1]#, 1, 1]   # F6
 }
 
 # Grab tempo
@@ -74,7 +87,7 @@ def play_midi_file(midi_file_path):
     midi_file = mido.MidiFile(midi_file_path)
 
     # Store the current state of the holes
-    current_holes = [0] * 10
+    current_holes = [0] * 8
 
     # Iterate through MIDI messages in the file
     for message in midi_file.play():
@@ -99,6 +112,7 @@ def play_midi_file(midi_file_path):
 
     # Cleanup GPIO after the file has finished playing
     GPIO.cleanup()
+    print(f"Complete")
 
 # Call the function with the path to your MIDI file
 play_midi_file(midi_file_path)

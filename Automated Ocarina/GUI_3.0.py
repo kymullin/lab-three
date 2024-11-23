@@ -20,7 +20,7 @@ def play_midi(song_name):
         "Twinkle Twinkle Little Star": "twinkle.mid",
         "Wheels on the Bus": "wheels_on_the_bus.mid",
         "Heart and Soul": "heart_and_soul.mid",
-        "Tetris": "tetris.mid",
+        "Scale": "scale.mid",
         "Jingle Bells": "jingle_bells.mid"
     }
     
@@ -80,7 +80,7 @@ def create_button(text, bg_color, command):
 button1 = create_button("Twinkle Twinkle Little Star", "#FF0000", lambda: on_button_click("Twinkle Twinkle Little Star"))
 button2 = create_button("Wheels on the Bus", "#FF5733", lambda: on_button_click("Wheels on the Bus"))
 button3 = create_button("Heart and Soul", "#FF9800", lambda: on_button_click("Heart and Soul"))
-button4 = create_button("Tetris", "#3F51B5", lambda: on_button_click("Tetris"))
+button4 = create_button("Scale", "#3F51B5", lambda: on_button_click("Scale"))
 button5 = create_button("Jingle Bells", "#9C27B0", lambda: on_button_click("Jingle Bells"))
 
 # Place the buttons on the window with some space in between
